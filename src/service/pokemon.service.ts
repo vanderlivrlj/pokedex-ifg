@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Pokemon } from 'src/model/Pokemon';
-import { ReplaySubject, map, mergeMap, switchMap, from } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonService {
 
-  public pokemons: Pokemon[] = [];
+  private readonly pageSize = 10;  // Tamanho da página
 
-  constructor(private httpClient: HttpClient) {
-    const url = 'https://pokeapi.co/api/v2/pokemon/?limit=100';
-    this.httpClient.get<any>(url).pipe(
-      map( value => value.results),
-      map(pokemon =>{
-        console.log(pokemon);
-        return from(pokemon).pipe(
-          mergeMap((v: any) => this.httpClient.get(v.url))
-        )
-      }), 
-      mergeMap(pokemon => pokemon),
-      ).subscribe((result: any) => {
-        console.log(result);
-        const pokemon: Pokemon = {
-          image: result.sprites.front_default,
-          number: result.id,
-          name: result.name,
-          types: result.types.map((t:any ) => t.type.name), 
-        };
-        this.pokemons[result.id] = pokemon;
-        });
-   }
+  constructor(private httpClient: HttpClient) {}
+
+  // Busca uma página específica de Pokémon
+  public getPokemonPage(pageNumber: number): Observable<Pokemon[]> {
+    const offset = (pageNumber - 1) * this.pageSize;
+    const url = `https://pokeapi.co/api/v2/pokemon/?limit=${this.pageSize}&offset=${offset}`;
+
+    return this.httpClient.get<any>(url).pipe(
+      map(response => response.results),
+      switchMap(pokemonResults => this.fetchDetailedPokemonData(pokemonResults))
+    );
+  }
+
+  // Busca dados detalhados de cada Pokémon individual
+  private fetchDetailedPokemonData(pokemonResults: any[]): Observable<Pokemon[]> {
+    const pokemonObservables: Observable<Pokemon>[] = pokemonResults.map(pokemonResult => {
+      return this.httpClient.get<any>(pokemonResult.url).pipe(
+        map(detailedResult => this.mapToPokemon(detailedResult))
+      );
+    });
+    return forkJoin(pokemonObservables);
+  }
+
+  // Mapeia os dados detalhados de um Pokémon
+  private mapToPokemon(result: any): Pokemon {
+    return {
+      image: result.sprites.front_default,
+      number: result.id,
+      name: result.name,
+      types: result.types.map((t: any) => t.type.name),
+    };
+  }
 }

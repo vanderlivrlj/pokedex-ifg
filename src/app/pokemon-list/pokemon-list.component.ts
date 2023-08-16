@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Pokemon } from 'src/model/Pokemon';
 import { Type } from 'src/model/Type';
 import { PokemonService } from 'src/service/pokemon.service';
@@ -8,7 +8,7 @@ import { PokemonService } from 'src/service/pokemon.service';
   templateUrl: './pokemon-list.component.html',
   styleUrls: ['./pokemon-list.component.scss']
 })
-export class PokemonListComponent {
+export class PokemonListComponent implements OnInit {
   // public pokemons: Pokemon[] = [
   //   {
   //     image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png',
@@ -63,8 +63,31 @@ export class PokemonListComponent {
   //   },
   // ];
 
+  currentPage = 1;
+  pokemonList: Pokemon[] = [];
 
   constructor(public pokemonService: PokemonService){}
 
+  ngOnInit(): void {
+    this.loadPokemonPage(this.currentPage);
+  }
+
+  loadPokemonPage(pageNumber: number): void {
+    this.pokemonService.getPokemonPage(pageNumber).subscribe(pokemonPage => {
+      this.pokemonList = pokemonPage;
+    });
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadPokemonPage(this.currentPage);
+    }
+  }
+
+  goToNextPage(): void {
+    this.currentPage++;
+    this.loadPokemonPage(this.currentPage);
+  }
 
 }

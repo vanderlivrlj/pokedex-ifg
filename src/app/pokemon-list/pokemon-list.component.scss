@@ -3,3 +3,44 @@
     flex-wrap: wrap;
     place-content: space-evenly;
 }
+
+.footer-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Estilos para a navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #e84e1b;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .navbar img {
+    max-height: 50px;
+}
+
+/* Estilos para o container de Pokémon */
+.pokemon-container {
+    margin-top: 60px; /* Espaçamento entre a navbar e a seção de Pokémon */
+    padding: 20px; /* Espaçamento interno do container */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Espaço entre os Pokémon */
+    gap: 20px; /* Espaço entre os Pokémon na vertical */
+  }

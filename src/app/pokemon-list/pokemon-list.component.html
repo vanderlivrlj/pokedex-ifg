@@ -1,2 +1,12 @@
-<app-pokemon-card *ngFor="let pokemon of pokemonService.pokemons"
-[pokemon]="pokemon"></app-pokemon-card>
+<nav class="navbar">
+    <img src="assets/img/logo-pokemon.png" alt="Logo do Pokémon">
+</nav>
+<div class="pokemon-container">
+    <app-pokemon-card *ngFor="let pokemon of pokemonList"
+        [pokemon]="pokemon">
+    </app-pokemon-card>
+</div>
+<div class="footer-buttons">
+    <button (click)="goToPreviousPage()" [disabled]="currentPage === 1">Página Anterior</button>
+    <button (click)="goToNextPage()">Próxima Página</button>
+</div>
