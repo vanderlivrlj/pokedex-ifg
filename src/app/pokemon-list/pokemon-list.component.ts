@@ -63,21 +63,28 @@ export class PokemonListComponent implements OnInit {
   //   },
   // ];
 
+   // Página atual que está sendo exibida.
   currentPage = 1;
+  // Lista de Pokemon a ser exibida na página.
   pokemonList: Pokemon[] = [];
 
   constructor(public pokemonService: PokemonService){}
 
+  // Função que é executada quando o componente é inicializado.
   ngOnInit(): void {
+    // Carrega a página de Pokemon com o número da página atual.
     this.loadPokemonPage(this.currentPage);
   }
 
+  // Carrega a página de Pokemon com base no número da página.
   loadPokemonPage(pageNumber: number): void {
     this.pokemonService.getPokemonPage(pageNumber).subscribe(pokemonPage => {
+      // Atualiza a lista de Pokemon exibida.
       this.pokemonList = pokemonPage;
     });
   }
 
+  // Navega para a página anterior, se disponível.
   goToPreviousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -85,6 +92,7 @@ export class PokemonListComponent implements OnInit {
     }
   }
 
+  // Navega para a próxima página.
   goToNextPage(): void {
     this.currentPage++;
     this.loadPokemonPage(this.currentPage);

@@ -8,10 +8,13 @@ import { Pokemon, getPokemonImage, getPokemonNumber } from 'src/model/Pokemon';
 })
 export class PokemonCardComponent {
 
+  // Recebe o Pokemon como entrada do componente.
   @Input('pokemon')
   public pokemon: Pokemon;
 
+  // Associa a função getPokemonImage para que ela possa ser usada no template.
   public getPokemonImage = getPokemonImage;
+  // Associa a função getPokemonNumber para que ela possa ser usada no template.
   public getPokemonNumber = getPokemonNumber;
 
   
